@@ -17,3 +17,6 @@ class Database():
 			print(e)
 			sys.exit(1)
 
+	def ExportMembers(self, outputFile):
+		sys.exit(0)
+
