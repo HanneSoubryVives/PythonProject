@@ -1,4 +1,9 @@
 from general.actions import * #import everything from this file
+from general.settings import *
+from database.database import Database as db
+
+#initialize database
+database = db(databaseFile)
 
 #start program
 while(True):
