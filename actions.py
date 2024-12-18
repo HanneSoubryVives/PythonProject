@@ -59,10 +59,28 @@ class ExportAction(Enum):
     Scores = 2
     All = 3
 
-def StartExportMembers():
-    output = input("Output file: ")
-    database.ExportMembers(output)
+def StartExport(exportOptionsKey):
+    output = input("Excel output file?\n")
+    if not output.endswith(".xlsx"):
+        output += ".xlsx"
 
+    try:
+        database.Export(output, database.exportOptions[exportOptionsKey])
+    except Exception as e:
+        print(f"Exporting to excel has failed")
+        print(e)
+
+def StartExportMembers():
+    StartExport("Members")
+
+def StartExportScores():
+    StartExport("Scores")
+
+def StartExportAll():
+    StartExport("All")
+    
 export_action_functions = {
-    ExportAction.Members.value: StartExportMembers
+    ExportAction.Members.value: StartExportMembers,
+    ExportAction.Scores.value: StartExportScores,
+    ExportAction.All.value: StartExportAll
 }

@@ -1,22 +1,50 @@
 import sys
 import sqlite3
 from pathlib import Path
+import pandas as pd 
 
 class Database():
 	def __init__(self, databaseFile):
+		self.exportOptions = {
+		"Members": "SELECT * FROM members",
+		"Scores": "SELECT * FROM scores",
+		"All": "SELECT * FROM members JOIN scores using(member_id)"}
+
+		self.ConnectDatabase(databaseFile)
+
+	def ConnectDatabase(self, databaseFile):
 		#move to root folder, then add the file location
 		self.__parent_dir = Path(__file__).parent.parent.absolute()
 		databaseFile = self.__parent_dir / databaseFile
 
 		#make connection
 		try:
-			self.__database = sqlite3.connect(databaseFile)
-			self.__cursor = self.__database.cursor()
+			self.__db = sqlite3.connect(databaseFile)
+			self.__cursor = self.__db.cursor()
 		except Exception as e:
-			print(f"Connecting to database failed")
-			print(e)
+			print(f"Connecting to database has failed:\n{e}")
 			sys.exit(1)
 
-	def ExportMembers(self, outputFile):
-		sys.exit(0)
+
+	def Export(self, outputFile, exportOption):
+		#file location
+		outputFile = self.__parent_dir / outputFile
+		try:
+			result = self.__cursor.execute(exportOption).fetchall()
+		except Exception as e:
+			print(f"Executing fetch all data from table has failed:\n{e}")
+			sys.exit(1)
+
+		#get and clean column names
+		#row data output from cursor -> column data input for pandas
+		columns = [description[0] for description in self.__cursor.description]
+		data = {}
+
+		for index in range(0, len(columns)): 
+			columns[index] = columns[index].replace("_", " ").capitalize()
+			data[columns[index]] = [row[index] for row in result]
+
+		dataframe = pd.DataFrame(data)
+		dataframe.to_excel(outputFile, index=False)
+		#print(data)
 

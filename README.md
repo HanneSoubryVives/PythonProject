@@ -9,5 +9,5 @@ Activate the virtual environment:
 Install the packages from requirements.txt
 
 Go to general > settings.py
--> set the databaseFile to the correct location
--> example: database/archery.db
+-> set the databaseFile to the correct location (relative to project root)
+-> example database provided in ./database/archery.db
