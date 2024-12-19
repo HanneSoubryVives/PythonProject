@@ -9,7 +9,7 @@ database = db(databaseFile)
 #Loop
 def ActionLoop(actionOptions, actionFunctions):
     # ask action
-    give_options = "\nSelect action:\n"
+    give_options = "\nSelect action (input the number):\n"
     for action in list(actionOptions):
         give_options += f"{action.value}. {action.name}\n"
 
@@ -35,13 +35,13 @@ def ActionLoop(actionOptions, actionFunctions):
 #Main actions
 class MainAction(Enum):
     Export = 1
-    Test2 = 2
+    Modify = 2
     Quit = 3
 
 def quit():
     exit(0)
 
-def ExportMembers():
+def ExportLoop():
     ActionLoop(ExportAction, export_action_functions)
 
 def testFunction2():
@@ -49,8 +49,8 @@ def testFunction2():
 
 main_action_functions = {
     MainAction.Quit.value: quit,
-    MainAction.Export.value: ExportMembers,
-    MainAction.Test2.value: testFunction2,
+    MainAction.Export.value: ExportLoop,
+    MainAction.Modify.value: testFunction2,
 }
 
 #Export actions
@@ -70,17 +70,17 @@ def StartExport(exportOptionsKey):
         print(f"Exporting to excel has failed")
         print(e)
 
-def StartExportMembers():
+def ExportMembers():
     StartExport("Members")
 
-def StartExportScores():
+def ExportScores():
     StartExport("Scores")
 
-def StartExportAll():
+def ExportAll():
     StartExport("All")
     
 export_action_functions = {
-    ExportAction.Members.value: StartExportMembers,
-    ExportAction.Scores.value: StartExportScores,
-    ExportAction.All.value: StartExportAll
+    ExportAction.Members.value: ExportMembers,
+    ExportAction.Scores.value: ExportScores,
+    ExportAction.All.value: ExportAll
 }
