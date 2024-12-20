@@ -4,6 +4,7 @@ from pathlib import Path
 import pandas as pd 
 
 class Database():
+	#initialization
 	def __init__(self, databaseFile):
 		self.exportOptions = {
 		"Members": "SELECT * FROM members",
@@ -25,7 +26,12 @@ class Database():
 			print(f"Connecting to database has failed:\n{e}")
 			sys.exit(1)
 
+	#cleanup
+	def Close(self):
+		self.__cursor.close()
+		self.__db.close()
 
+	#functionality
 	def Export(self, outputFile, exportOption):
 		#file location
 		outputFile = self.__parent_dir / outputFile

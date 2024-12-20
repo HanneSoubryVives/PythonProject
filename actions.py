@@ -39,6 +39,7 @@ class MainAction(Enum):
     Quit = 3
 
 def quit():
+    database.Close()
     exit(0)
 
 def ExportLoop():
