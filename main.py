@@ -1,5 +1,6 @@
-from actions import ActionLoop, MainAction, main_action_functions
+from actions import main_actions
+from general.input_functions import ExecuteChoice
 
 #start program
 while(True):
-    ActionLoop(MainAction, main_action_functions)
+    ExecuteChoice(main_actions)

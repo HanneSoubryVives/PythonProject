@@ -32,7 +32,7 @@ class Database():
 		self.__db.close()
 
 	#functionality
-	def Export(self, outputFile, exportOption):
+	def ExportToExcel(self, outputFile, exportOption):
 		#file location
 		outputFile = self.__parent_dir / outputFile
 		try:
