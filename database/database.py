@@ -5,7 +5,6 @@ from pathlib import Path
 import pandas as pd 
 
 class Database():
-	#initialization
 	def __init__(self, databaseFile):
 		self.exportOptions = {
 		"Members": "SELECT * FROM members",
@@ -36,10 +35,10 @@ class Database():
 	#pandas
 	def QueryResultToPandas(self, result):
 		#get and clean column names
-		#row data output from cursor -> column data input for pandas
 		columns = [description[0] for description in self.__cursor.description]
-		data = {}
 
+		#row data output from cursor -> column data input for pandas
+		data = {}
 		for index in range(0, len(columns)): 
 			columns[index] = columns[index].replace("_", " ").capitalize()
 			data[columns[index]] = [row[index] for row in result]
@@ -56,6 +55,7 @@ class Database():
 			return False
 
 		return True
+
 	def Commit(self):
 		self.__db.commit()
 
@@ -70,7 +70,6 @@ class Database():
 			print(f"Displaying select query has failed:\n{e}")
 
 	def ExportToExcel(self, outputFile, sql_query):
-		#file location
 		outputFile = self.__parent_dir / outputFile
 		try:
 			result = self.__cursor.execute(sql_query).fetchall()

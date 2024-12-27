@@ -1,18 +1,14 @@
-from sys import exit
-
 #general functions
 def CreateOptionStringFromStrings(options):
     give_options = "\nOptions: (input the number)\n"
-    for index in range(1, len(options) + 1): 
-    # +1 because end number is not included
+    for index in options.keys(): 
         give_options += f"{index}. {options[index]}\n"
 
     return give_options
 
 def CreateOptionStringFromNamedFunctions(options):
     give_options = "\nOptions: (input the number)\n"
-    for index in range(1, len(options) + 1): 
-    # +1 because end number is not included
+    for index in options.keys(): 
         give_options += f"{index}. {options[index].name}\n"
 
     return give_options

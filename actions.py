@@ -48,7 +48,6 @@ actions_after_query = {
     4 : NamedFunction("Continue", DoNothing)
 }
 
-#other functions
 #needs database access
 def AskOutputFile():
     output = input("Excel output file?\n")
