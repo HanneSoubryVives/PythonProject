@@ -1,3 +1,4 @@
+from database.settings import databaseFile
 import sys
 import sqlite3
 from pathlib import Path
@@ -10,6 +11,8 @@ class Database():
 		"Members": "SELECT * FROM members",
 		"Scores": "SELECT * FROM scores",
 		"All": "SELECT * FROM members JOIN scores using(member_id)"}
+		self.query = ""
+		self.__valid_query = False
 
 		self.ConnectDatabase(databaseFile)
 
@@ -32,11 +35,26 @@ class Database():
 		self.__db.close()
 
 	#functionality
-	def ExportToExcel(self, outputFile, exportOption):
+	def TryRunQuery(self):
+		try:
+			result = self.__cursor.execute(self.query).fetchall()
+			print(result)
+
+			#display as pandas table
+
+		except Exception as e:
+			print(f"Executing query has failed:\n{e}")
+			self.__valid_query = False
+			return False
+
+		self.__valid_query = True
+		return True
+
+	def ExportToExcel(self, outputFile, sql_query):
 		#file location
 		outputFile = self.__parent_dir / outputFile
 		try:
-			result = self.__cursor.execute(exportOption).fetchall()
+			result = self.__cursor.execute(sql_query).fetchall()
 		except Exception as e:
 			print(f"Executing fetch all data from table has failed:\n{e}")
 			sys.exit(1)
@@ -54,3 +72,5 @@ class Database():
 		dataframe.to_excel(outputFile, index=False)
 		#print(data)
 
+#initialize
+database = Database(databaseFile)

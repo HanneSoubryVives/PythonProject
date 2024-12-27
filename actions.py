@@ -1,11 +1,6 @@
-from database.database import Database as db
-from general.settings import * #import everything from this file
-from general.input_functions import *
+from database.database import database
+from general.input_functions import NamedFunction, AskOption
 
-#initialize database
-database = db(databaseFile)
-
-#must stay at the top of the file (because used to define actions)
 def Quit():
     database.Close()
     exit(0)
@@ -13,12 +8,15 @@ def Quit():
 def Export():
     StartExport(AskOption(export_table_options))
 
-def testFunction2():
-    print("Testfunction executed!")
+def RunQuery():
+    database.query = input("Enter your query: \n")
+    database.TryRunQuery()
+    #if query succeeded: ask to export or not
+
 
 #define main actions
-main_actions = { 1 : NamedFunction("Export", Export), 
-                2 : NamedFunction("Modify", testFunction2), 
+main_actions = { 1 : NamedFunction("Quick Export", Export), 
+                2 : NamedFunction("SQL Query", RunQuery), 
                 3 : NamedFunction("Quit", Quit)}
 
 #define export actions
@@ -26,12 +24,6 @@ export_table_options = {
     1 : "Members",
     2 : "Scores",
     3 : "All"}
-
-#define modify actions
-modify_actions = {
-    1 : "Change",
-    2 : "Add",
-    3 : "Delete"}
 
 #other functions
 #needs database access
