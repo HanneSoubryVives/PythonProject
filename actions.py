@@ -1,5 +1,5 @@
 from database.database import database
-from general.input_functions import NamedFunction, AskOption
+from general.input_functions import NamedFunction, AskOption, ExecuteChoice
 
 def Quit():
     database.Close()
@@ -12,15 +12,24 @@ def RunQuery():
     database.query = input("Enter your query: \n")
     succes = database.TryRunQuery()
     if succes: 
-        choice = AskOption(export_question)
-        if choice == 1:
-            output = AskOutputFile()
-            try:
-                database.ExportToExcel(output, database.query)
-            except Exception as e:
-                print(f"Exporting to excel has failed")
-                print(e)
+        ExecuteChoice(actions_after_query)
 
+def Commit():
+    database.Commit()
+
+def Display():
+    database.DisplaySelected()
+
+def ExportQuery():
+    output = AskOutputFile()
+    try:
+        database.ExportToExcel(output, database.query)
+    except Exception as e:
+        print(f"Exporting to excel has failed")
+        print(e)
+
+def DoNothing():
+    pass
 
 #define actions & options
 main_actions = { 1 : NamedFunction("Quick Export", Export), 
@@ -32,9 +41,11 @@ export_table_options = {
     2 : "Scores",
     3 : "All"}
 
-export_question = {
-    1 : "Export result",
-    2 : "Continue without export"
+actions_after_query = {
+    1 : NamedFunction("Commit change", Commit),
+    2 : NamedFunction("Display selected", Display),
+    3 : NamedFunction("Export selected", ExportQuery),
+    4 : NamedFunction("Continue", DoNothing)
 }
 
 #other functions

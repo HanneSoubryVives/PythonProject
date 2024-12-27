@@ -33,19 +33,41 @@ class Database():
 		self.__cursor.close()
 		self.__db.close()
 
+	#pandas
+	def QueryResultToPandas(self, result):
+		#get and clean column names
+		#row data output from cursor -> column data input for pandas
+		columns = [description[0] for description in self.__cursor.description]
+		data = {}
+
+		for index in range(0, len(columns)): 
+			columns[index] = columns[index].replace("_", " ").capitalize()
+			data[columns[index]] = [row[index] for row in result]
+
+		self.__dataframe = pd.DataFrame(data)
+
 	#functionality
 	def TryRunQuery(self):
 		try:
-			result = self.__cursor.execute(self.query).fetchall()
-			print(result)
-
-			#display as pandas table
+			result = self.__cursor.execute(self.query)
 
 		except Exception as e:
 			print(f"Executing query has failed:\n{e}")
 			return False
 
 		return True
+	def Commit(self):
+		self.__db.commit()
+
+	def DisplaySelected(self):
+		try:
+			result = self.__cursor.fetchall()
+			self.QueryResultToPandas(result)
+			print("")
+			print(self.__dataframe)
+
+		except Exception as e:
+			print(f"Displaying select query has failed:\n{e}")
 
 	def ExportToExcel(self, outputFile, sql_query):
 		#file location
@@ -56,18 +78,8 @@ class Database():
 			print(f"Executing fetch all data from table has failed:\n{e}")
 			sys.exit(1)
 
-		#get and clean column names
-		#row data output from cursor -> column data input for pandas
-		columns = [description[0] for description in self.__cursor.description]
-		data = {}
-
-		for index in range(0, len(columns)): 
-			columns[index] = columns[index].replace("_", " ").capitalize()
-			data[columns[index]] = [row[index] for row in result]
-
-		dataframe = pd.DataFrame(data)
-		dataframe.to_excel(outputFile, index=False)
-		#print(data)
+		self.QueryResultToPandas(result)
+		self.__dataframe.to_excel(outputFile, index=False)
 
 #initialize
 database = Database(databaseFile)
