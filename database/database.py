@@ -12,7 +12,6 @@ class Database():
 		"Scores": "SELECT * FROM scores",
 		"All": "SELECT * FROM members JOIN scores using(member_id)"}
 		self.query = ""
-		self.__valid_query = False
 
 		self.ConnectDatabase(databaseFile)
 
@@ -44,10 +43,8 @@ class Database():
 
 		except Exception as e:
 			print(f"Executing query has failed:\n{e}")
-			self.__valid_query = False
 			return False
 
-		self.__valid_query = True
 		return True
 
 	def ExportToExcel(self, outputFile, sql_query):
